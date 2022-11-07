@@ -1,9 +1,4 @@
-import java.awt.*;
-
-/**
- * Created by chales on 11/6/2017.
- */
-public class Astronaut {
+public class SpiderMan {
 
     //VARIABLE DECLARATION SECTION
     //Here's where you state which variables you are going to use.
@@ -19,39 +14,33 @@ public class Astronaut {
 
     //This is a constructor that takes 3 parameters.
     // This allows us to specify the hero's name and position when we build it.
-    public Astronaut(String pName, int pXpos, int pYpos) { // Astronaut constructor
+    public SpiderMan(String pName, int pXpos, int pYpos) { // Astronaut constructor
         name = pName;
         xpos = pXpos;
         ypos = pYpos;
-        dx = 1;
-        dy = 1;
+        dx = 2;
+        dy = 2;
         width = 60;
         height = 60;
         isAlive = true;
- 
+
     } // end Astronaut constructor
 
     //The move method.  Everytime this is run (or "called") the hero's x position and y position change by dx and dy
     public void move() { // move
         xpos = xpos + dx;
         ypos = ypos + dy;
- 
+
     } // end move
 
     public void bounce() {
         xpos = xpos + dx;
         ypos = ypos + dy;
         //if alien hits the border, make dx and dy  negative
-        if(xpos == 1000-width){
-            dx = - dx;
-        }
-        if(xpos == 0){
+        if (xpos == 1000 - width || xpos <= 0) {
             dx = -dx;
         }
-        if(ypos == 700-height){
-            dy = -dy;
-        }
-        if(ypos == 0){
+        if (ypos == 700 - height || ypos == 0) {
             dy = -dy;
         }
     }
@@ -59,8 +48,17 @@ public class Astronaut {
     public void wraparound(){
         xpos = xpos + dx;
         ypos = ypos + dy;
-        if(xpos == 1000){
-            xpos = 0;
+        if(xpos >= 1000 && dx > 0){
+            xpos = -width;
+        }
+        if(xpos <= -width && dx < 0){
+            xpos = 1000;
+        }
+        if(ypos >= 700 && dy > 0){
+            ypos = -height;
+        }
+        if(ypos <= -height && dy < 0){
+            ypos = 700;
         }
     }
 }
