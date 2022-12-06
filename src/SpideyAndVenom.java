@@ -24,15 +24,9 @@ import javax.swing.JPanel;
 
 public class SpideyAndVenom implements Runnable {
 
-    //Variable Definition Section
-    //Declare the variables used in the program
-    //You can set their initial values too
-
-    //Sets the width and height of the program window
     final int WIDTH = 1000;
     final int HEIGHT = 600;
 
-    //Declare the variables needed for the graphics
     public JFrame frame;
     public Canvas canvas;
     public JPanel panel;
@@ -41,31 +35,28 @@ public class SpideyAndVenom implements Runnable {
     public Image spideyPic;
     public Image venomPic;
     public Image carnagePic;
-    public Image backgroundPic;
+    public Image cityPic;
+    public Image bankPic;
+    public Image damagedbankPic;
+    public Image almostdestroyedbankPic;
+    public Image rubblePic;
 
-    //Declare the objects used in the program
-    //These are things that are made up of more than one variable type
     public SpiderMan spidey;
     public SpiderMan venom;
     public SpiderMan carnage;
+    public SpiderMan bank;
+
+    public int damage;
 
 
-    // Main method definition
-    // This is the code that runs first and automatically
     public static void main(String[] args) {
-        SpideyAndVenom ex = new SpideyAndVenom();   //creates a new instance of the game
-        new Thread(ex).start();                 //creates a threads & starts up the code in the run( ) method
+        SpideyAndVenom ex = new SpideyAndVenom();
+        new Thread(ex).start();
     }
 
-
-    // This section is the setup portion of the program
-    // Initialize your variables and construct your program objects here.
     public SpideyAndVenom() { // BasicGameApp constructor
 
         setUpGraphics();
-
-        //variable and objects
-        //create (construct) the objects needed for the game and load up
       spideyPic = Toolkit.getDefaultToolkit().getImage("SpiderManPng.png"); //load the picture
         spidey = new SpiderMan("spidey",10,100); //construct the astronaut
         spidey.dy = 0;
@@ -76,54 +67,57 @@ public class SpideyAndVenom implements Runnable {
         carnagePic = Toolkit.getDefaultToolkit().getImage("carnage.png");
         carnage = new SpiderMan("carnage", 405, 250);
 
-        backgroundPic = Toolkit.getDefaultToolkit().getImage("city.jpg");
+        cityPic = Toolkit.getDefaultToolkit().getImage("city.jpg");
+
+        bankPic = Toolkit.getDefaultToolkit().getImage("bank.png");
+        bank = new SpiderMan("bank", 0, 400);
+
+        damagedbankPic = Toolkit.getDefaultToolkit().getImage("damagedbank.png");
+
+        almostdestroyedbankPic = Toolkit.getDefaultToolkit().getImage("almostdestroyedbank.png");
+
+        rubblePic = Toolkit.getDefaultToolkit().getImage("rubble.png");
 
 
-    } // end BasicGameApp constructor
-
-
-//*******************************************************************************
-//User Method Section
-//
-// put your code to do things here.
-
-    // main thread
-    // this is the code that plays the game after you set things up
+    }
     public void run() {
 
-        //for the moment we will loop things forever.
         while (true) {
-            moveThings();  //move all the game objects
+            movement();
             crashVS();
             crashCV();
             crashSC();
-            render();  // paint the graphics
-            pause(20); // sleep for 10 ms
+            crashBS();
+            crashBC();
+            crashBV();
+            render();
+            pause(20);
         }
     }
 
-    public void moveThings() {
-        //calls the move( ) code in the objects
+    public void movement() {
         spidey.wraparound();
         venom.bounce();
         carnage.carnagebounce();
-
+        bank.bankstuff();
+        damage = 0;
     }
 
     public void crashVS() {
-        //if spidey and venom collide, they bounce
         if(venom.rec.intersects(spidey.rec)) {
             venom.dx = -venom.dx;
+            venom.dy = -venom.dy;
+            spidey.dx = -spidey.dx;
             spidey.dy = -spidey.dy;
         }
     }
 
     public void crashSC() {
         if(spidey.rec.intersects(carnage.rec)) {
-            carnage.xpos = 500;
-            carnage.ypos = 500;
-            spidey.xpos = 500;
-            spidey.ypos = 300;
+            carnage.dx = 1;
+            carnage.dy = 4;
+            spidey.dx = 3;
+            spidey.dy = 2;
         }
     }
 
@@ -135,7 +129,30 @@ public class SpideyAndVenom implements Runnable {
         }
     }
 
-    //Pauses or sleeps the computer for the amount specified in milliseconds
+    public void crashBS() {
+        if(spidey.rec.intersects(bank.rec)) {
+            spidey.dx = -spidey.dx;
+            spidey.dy = -spidey.dy;
+            damage = 1;
+        }
+    }
+
+    public void crashBC() {
+        if(carnage.rec.intersects(bank.rec)) {
+            carnage.dx = -carnage.dx;
+            carnage.dy = -carnage.dy;
+            damage = 3;
+        }
+    }
+
+    public void crashBV() {
+        if(venom.rec.intersects(bank.rec)) {
+            venom.dx = -venom.dx;
+            venom.dy = -venom.dy;
+            damage = 2;
+        }
+    }
+
     public void pause(int time ) {
         try {
             Thread.sleep(time);
@@ -143,7 +160,7 @@ public class SpideyAndVenom implements Runnable {
         }
     }
 
-    //Graphics setup method
+
     private void setUpGraphics() {
         frame = new JFrame("Application Template");   //Create the program window or frame.  Names it.
 
@@ -172,22 +189,29 @@ public class SpideyAndVenom implements Runnable {
         System.out.println("DONE graphic setup");
     }
 
-    //Paints things on the screen using bufferStrategy
     private void render() {
         Graphics2D g = (Graphics2D) bufferStrategy.getDrawGraphics();
         g.clearRect(0, 0, WIDTH, HEIGHT);
-        g.drawImage(backgroundPic,0,0, WIDTH, HEIGHT, null);
+        g.drawImage(cityPic,0,0, WIDTH, HEIGHT, null);
 
-        //draw the image of the astronaut
-        if(spidey.isAlive == true) {
-            g.drawImage(spideyPic, spidey.xpos, spidey.ypos, spidey.width, spidey.height, null);
-            g.drawRect(spidey.rec.x, spidey.rec.y, spidey.rec.width, spidey.rec.height);
+        if(damage == 0) {
+            g.drawImage(bankPic, 0, 400, WIDTH / 4, HEIGHT / 3, null);
         }
+        if(damage == 1) {
+            g.drawImage(damagedbankPic, 0, 400, WIDTH/4, HEIGHT/3, null);
+        }
+        if(damage == 2) {
+            g.drawImage(almostdestroyedbankPic, 0, 400, WIDTH/4, HEIGHT/3, null);
+        }
+        if(damage == 3) {
+            g.drawImage(rubblePic, 0, 100, WIDTH, HEIGHT, null);
+        }
+
+        g.drawImage(spideyPic, spidey.xpos, spidey.ypos, spidey.width, spidey.height, null);
+
         g.drawImage(venomPic, venom.xpos, venom.ypos, venom.width, venom.height, null);
-        g.drawRect(venom.rec.x, venom.rec.y, venom.rec.width, venom.rec.height);
 
         g.drawImage(carnagePic, carnage.xpos, carnage.ypos, carnage.width, carnage.height, null);
-        g.drawRect(carnage.rec.x, carnage.rec.y, carnage.rec.width, carnage.rec.height);
 
         g.dispose();
         bufferStrategy.show();

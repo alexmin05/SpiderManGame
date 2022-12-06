@@ -19,8 +19,8 @@ public class SpiderMan {
     // This allows us to specify the hero's name and position when we build it.
     public SpiderMan(String pName, int pXpos, int pYpos) { // Astronaut constructor
         name = pName;
-        xpos = (int)(Math.random()*400+100);
-        ypos = (int)(Math.random()*150+50);
+        xpos = (int)(Math.random()*900+0);
+        ypos = (int)(Math.random()*500+0);
         dx = 2;
         dy = 2;
         width = 60;
@@ -34,10 +34,10 @@ public class SpiderMan {
     public void carnagebounce() {
         xpos = xpos - dx;
         ypos = ypos - dy;
-        if (xpos == 1000 - width || xpos <= 0) {
+        if (xpos >= 1000 - width || xpos <= 0) {
             dx = -dx;
         }
-        if (ypos == 600 - height || ypos == 0) {
+        if (ypos >= 600 - height || ypos <= 0) {
             dy = -dy;
         }
         rec = new Rectangle(xpos, ypos, width, height);
@@ -48,10 +48,10 @@ public class SpiderMan {
         xpos = xpos + dx;
         ypos = ypos + dy;
         //if alien hits the border, make dx and dy  negative
-        if (xpos == 1000 - width || xpos <= 0) {
+        if (xpos >= 1000 - width || xpos <= 0) {
             dx = -dx;
         }
-        if (ypos == 600 - height || ypos == 0) {
+        if (ypos >= 600 - height || ypos <= 0) {
             dy = -dy;
         }
         rec = new Rectangle(xpos, ypos, width, height);
@@ -59,7 +59,7 @@ public class SpiderMan {
 
     public void wraparound(){
         dx = 2;
-        dy = 2;
+        dy = 1;
         xpos = xpos + dx;
         ypos = ypos + dy;
         if(xpos >= 1000 && dx > 0){
@@ -75,6 +75,10 @@ public class SpiderMan {
             ypos = 600;
         }
         rec = new Rectangle(xpos, ypos, width, height);
+    }
+
+    public void bankstuff(){
+        rec = new Rectangle(xpos, ypos, 100, 200);
     }
 }
 
