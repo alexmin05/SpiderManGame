@@ -50,7 +50,7 @@ public class SpideyAndVenom implements Runnable {
     public SpiderMan bank;
     public SpiderMan school;
 
-    public int damage;
+    public int damage; // way of measuring damage to structures
     public int schooldamage;
 
     public SoundFile spideytheme;
@@ -62,7 +62,7 @@ public class SpideyAndVenom implements Runnable {
         new Thread(ex).start();
     }
 
-    public SpideyAndVenom() { // BasicGameApp constructor
+    public SpideyAndVenom() { // BasicGameApp constructor, associating "names" with images
 
         setUpGraphics();
       spideyPic = Toolkit.getDefaultToolkit().getImage("SpiderManPng.png"); //load the picture
@@ -89,10 +89,10 @@ public class SpideyAndVenom implements Runnable {
 
         rubblePic = Toolkit.getDefaultToolkit().getImage("rubble.png");
 
-        spideytheme = new SoundFile("spideytheme.wav");
+        spideytheme = new SoundFile("spideytheme.wav"); // Spider-Man theme which plays throughout
         spideytheme.play();
 
-        crash = new SoundFile("crash.wav");
+        crash = new SoundFile("crash.wav"); // when characters intersect structures, this sound will play
 
 
     }
@@ -201,7 +201,7 @@ public class SpideyAndVenom implements Runnable {
         g.clearRect(0, 0, WIDTH, HEIGHT);
         g.drawImage(cityPic,0,0, WIDTH, HEIGHT, null);
 
-        if(damage == 0) { // depending on how damaged the bank or school is, a different representation of the image will appear
+        if(damage == 0) { // depending on how damaged the structure is, a different representation of the image will appear
             g.drawImage(bankPic, 0, 400, WIDTH / 4, HEIGHT / 3, null);
         }
         if(damage == 1) {
@@ -211,7 +211,7 @@ public class SpideyAndVenom implements Runnable {
             g.drawImage(almostdestroyedbankPic, 0, 400, WIDTH/4, HEIGHT/3, null);
         }
         if(damage == 3) {
-            g.drawImage(rubblePic, 0, 500, WIDTH / 5, HEIGHT / 5, null);
+            g.drawImage(rubblePic, 0, 500, WIDTH / 4, HEIGHT / 4, null);
         }
         if(schooldamage == 0){
             g.drawImage(schoolPic, 700, 350, WIDTH/3, HEIGHT/2, null);
@@ -223,7 +223,7 @@ public class SpideyAndVenom implements Runnable {
             g.drawImage(almostdestroyedschoolPic, 700, 350, WIDTH/3, HEIGHT/2, null);
         }
         if(schooldamage == 3){
-            g.drawImage(rubblePic, 700, 400, WIDTH/3, HEIGHT/2, null);
+            g.drawImage(rubblePic, 700, 500, WIDTH/4, HEIGHT/4, null);
         }
 
         g.drawImage(spideyPic, spidey.xpos, spidey.ypos, spidey.width, spidey.height, null);

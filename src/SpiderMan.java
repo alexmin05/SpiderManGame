@@ -17,7 +17,7 @@ public class SpiderMan {
 
     //This is a constructor that takes 3 parameters.
     // This allows us to specify the hero's name and position when we build it.
-    public SpiderMan(String pName, int pXpos, int pYpos) { // Astronaut constructor
+    public SpiderMan(String pName, int pXpos, int pYpos) { // SpiderMan constructor
         name = pName;
         xpos = (int)(Math.random()*900+0);
         ypos = (int)(Math.random()*500+0);
@@ -28,10 +28,8 @@ public class SpiderMan {
         isAlive = true;
         rec = new Rectangle(xpos, ypos, width, height);
 
-    } // end Astronaut constructor
-
-    //The move method.  Everytime this is run (or "called") the hero's x position and y position change by dx and dy
-    public void carnagebounce() {
+    }
+    public void carnagebounce() { // Carnage's unique bounce (not actually different from regular bounce)
         xpos = xpos - dx;
         ypos = ypos - dy;
         if (xpos >= 1000 - width || xpos <= 0) {
@@ -42,9 +40,8 @@ public class SpiderMan {
         }
         rec = new Rectangle(xpos, ypos, width, height);
     }
-    // end move
 
-    public void bounce() {
+    public void bounce() { // how Venom bounces off the limits of the city
         xpos = xpos + dx;
         ypos = ypos + dy;
         //if alien hits the border, make dx and dy  negative
@@ -57,7 +54,7 @@ public class SpiderMan {
         rec = new Rectangle(xpos, ypos, width, height);
     }
 
-    public void wraparound(){
+    public void wraparound(){ // how Spidey "walks through walls" and appears on the opposite side
         dx = 2;
         dy = 1;
         xpos = xpos + dx;
@@ -77,11 +74,11 @@ public class SpiderMan {
         rec = new Rectangle(xpos, ypos, width, height);
     }
 
-    public void bankstuff(){
+    public void bankstuff(){ // bank's rectangle
         rec = new Rectangle(0, 400, 250, 220);
     }
 
-    public void schoolstuff(){
+    public void schoolstuff(){ // school's rectangle
         rec = new Rectangle(725, 350,300, 250);
     }
 }
