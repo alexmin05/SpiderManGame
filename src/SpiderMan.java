@@ -78,7 +78,11 @@ public class SpiderMan {
     }
 
     public void bankstuff(){
-        rec = new Rectangle(xpos, ypos, 100, 200);
+        rec = new Rectangle(0, 400, 250, 220);
+    }
+
+    public void schoolstuff(){
+        rec = new Rectangle(725, 350,300, 250);
     }
 }
 

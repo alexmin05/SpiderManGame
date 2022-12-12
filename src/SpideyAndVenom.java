@@ -39,14 +39,22 @@ public class SpideyAndVenom implements Runnable {
     public Image bankPic;
     public Image damagedbankPic;
     public Image almostdestroyedbankPic;
+    public Image schoolPic;
+    public Image damagedschoolPic;
+    public Image almostdestroyedschoolPic;
     public Image rubblePic;
 
     public SpiderMan spidey;
     public SpiderMan venom;
     public SpiderMan carnage;
     public SpiderMan bank;
+    public SpiderMan school;
 
     public int damage;
+    public int schooldamage;
+
+    public SoundFile spideytheme;
+    public SoundFile crash;
 
 
     public static void main(String[] args) {
@@ -71,12 +79,20 @@ public class SpideyAndVenom implements Runnable {
 
         bankPic = Toolkit.getDefaultToolkit().getImage("bank.png");
         bank = new SpiderMan("bank", 0, 400);
-
         damagedbankPic = Toolkit.getDefaultToolkit().getImage("damagedbank.png");
-
         almostdestroyedbankPic = Toolkit.getDefaultToolkit().getImage("almostdestroyedbank.png");
 
+        schoolPic = Toolkit.getDefaultToolkit().getImage("school.png");
+        school = new SpiderMan("school", 650, 250);
+        damagedschoolPic = Toolkit.getDefaultToolkit().getImage("damagedschool.png");
+        almostdestroyedschoolPic = Toolkit.getDefaultToolkit().getImage("almostdestroyedschool.png");
+
         rubblePic = Toolkit.getDefaultToolkit().getImage("rubble.png");
+
+        spideytheme = new SoundFile("spideytheme.wav");
+        spideytheme.play();
+
+        crash = new SoundFile("crash.wav");
 
 
     }
@@ -84,72 +100,63 @@ public class SpideyAndVenom implements Runnable {
 
         while (true) {
             movement();
-            crashVS();
-            crashCV();
-            crashSC();
-            crashBS();
-            crashBC();
-            crashBV();
+            crash();
             render();
             pause(20);
         }
     }
 
-    public void movement() {
+    public void movement() { // movement for characters and structures
         spidey.wraparound();
         venom.bounce();
         carnage.carnagebounce();
         bank.bankstuff();
-        damage = 0;
+        school.schoolstuff();
+        damage = 0 + damage;
+        schooldamage = 0 + schooldamage;
     }
 
-    public void crashVS() {
-        if(venom.rec.intersects(spidey.rec)) {
+    public void crash() { // interactions between characters and structures
+        if (venom.rec.intersects(spidey.rec)) {
             venom.dx = -venom.dx;
             venom.dy = -venom.dy;
             spidey.dx = -spidey.dx;
             spidey.dy = -spidey.dy;
         }
-    }
-
-    public void crashSC() {
-        if(spidey.rec.intersects(carnage.rec)) {
+        if (spidey.rec.intersects(carnage.rec)) {
             carnage.dx = 1;
             carnage.dy = 4;
             spidey.dx = 3;
             spidey.dy = 2;
         }
-    }
-
-    public void crashCV() {
-        if(carnage.rec.intersects(venom.rec)) {
+        if (carnage.rec.intersects(venom.rec)) {
             carnage.xpos = venom.xpos;
             carnage.ypos = venom.ypos;
             carnage.bounce();
         }
-    }
-
-    public void crashBS() {
-        if(spidey.rec.intersects(bank.rec)) {
-            spidey.dx = -spidey.dx;
-            spidey.dy = -spidey.dy;
+        if (spidey.rec.intersects(bank.rec)) {
+            crash.play();
             damage = 1;
         }
-    }
-
-    public void crashBC() {
-        if(carnage.rec.intersects(bank.rec)) {
-            carnage.dx = -carnage.dx;
-            carnage.dy = -carnage.dy;
+        if (carnage.rec.intersects(bank.rec)) {
+            crash.play();
             damage = 3;
         }
-    }
-
-    public void crashBV() {
-        if(venom.rec.intersects(bank.rec)) {
-            venom.dx = -venom.dx;
-            venom.dy = -venom.dy;
+        if (venom.rec.intersects(bank.rec)) {
+            crash.play();
             damage = 2;
+        }
+        if (spidey.rec.intersects(school.rec)) {
+            crash.play();
+            schooldamage = 1;
+        }
+        if (carnage.rec.intersects(school.rec)) {
+            crash.play();
+            schooldamage = 3;
+        }
+        if (venom.rec.intersects(school.rec)) {
+            crash.play();
+            schooldamage = 2;
         }
     }
 
@@ -194,7 +201,7 @@ public class SpideyAndVenom implements Runnable {
         g.clearRect(0, 0, WIDTH, HEIGHT);
         g.drawImage(cityPic,0,0, WIDTH, HEIGHT, null);
 
-        if(damage == 0) {
+        if(damage == 0) { // depending on how damaged the bank or school is, a different representation of the image will appear
             g.drawImage(bankPic, 0, 400, WIDTH / 4, HEIGHT / 3, null);
         }
         if(damage == 1) {
@@ -204,7 +211,19 @@ public class SpideyAndVenom implements Runnable {
             g.drawImage(almostdestroyedbankPic, 0, 400, WIDTH/4, HEIGHT/3, null);
         }
         if(damage == 3) {
-            g.drawImage(rubblePic, 0, 100, WIDTH, HEIGHT, null);
+            g.drawImage(rubblePic, 0, 500, WIDTH / 5, HEIGHT / 5, null);
+        }
+        if(schooldamage == 0){
+            g.drawImage(schoolPic, 700, 350, WIDTH/3, HEIGHT/2, null);
+        }
+        if(schooldamage == 1){
+            g.drawImage(damagedschoolPic, 700, 350, WIDTH/3, HEIGHT/2, null);
+        }
+        if(schooldamage == 2){
+            g.drawImage(almostdestroyedschoolPic, 700, 350, WIDTH/3, HEIGHT/2, null);
+        }
+        if(schooldamage == 3){
+            g.drawImage(rubblePic, 700, 400, WIDTH/3, HEIGHT/2, null);
         }
 
         g.drawImage(spideyPic, spidey.xpos, spidey.ypos, spidey.width, spidey.height, null);
