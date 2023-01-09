@@ -13,6 +13,8 @@
 
 //Graphics Libraries
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
 import java.awt.*;
 import javax.swing.JFrame;
@@ -22,7 +24,7 @@ import javax.swing.JPanel;
 //*******************************************************************************
 // Class Definition Section
 
-public class SpideyAndVenom implements Runnable {
+public class SpideyAndVenom implements Runnable, KeyListener {
 
     final int WIDTH = 1000;
     final int HEIGHT = 600;
@@ -62,12 +64,13 @@ public class SpideyAndVenom implements Runnable {
         new Thread(ex).start();
     }
 
-    public SpideyAndVenom() { // BasicGameApp constructor, associating "names" with images
+    public SpideyAndVenom() {
 
         setUpGraphics();
-      spideyPic = Toolkit.getDefaultToolkit().getImage("SpiderManPng.png"); //load the picture
+        canvas.addKeyListener(this);
+
+        spideyPic = Toolkit.getDefaultToolkit().getImage("SpiderManPng.png"); //load the picture
         spidey = new SpiderMan("spidey",10,100); //construct the astronaut
-        spidey.dy = 0;
 
         venomPic = Toolkit.getDefaultToolkit().getImage("Venom.png");
         venom = new SpiderMan("venom", 800, 400);
@@ -107,7 +110,7 @@ public class SpideyAndVenom implements Runnable {
     }
 
     public void movement() { // movement for characters and structures
-        spidey.wraparound();
+        spidey.move();
         venom.bounce();
         carnage.carnagebounce();
         bank.bankstuff();
@@ -116,7 +119,46 @@ public class SpideyAndVenom implements Runnable {
         schooldamage = 0 + schooldamage;
     }
 
-    public void crash() { // interactions between characters and structures
+    public void keyPressed(KeyEvent event) {
+        char key = event.getKeyChar();
+        int keyCode = event.getKeyCode();
+        System.out.println("Key Pressed: " + key + "  Code: " + keyCode);
+
+        if (keyCode == 39) {
+            spidey.right = true;
+        }
+        if (keyCode == 40) {
+            spidey.down = true;
+        }
+        if (keyCode == 37){
+            spidey.left = true;
+        }
+        if (keyCode == 38){
+            spidey.up = true;
+        }
+    }
+
+    public void keyReleased(KeyEvent event) {
+        char key = event.getKeyChar();
+        int keyCode = event.getKeyCode();
+
+        if (keyCode == 39) {
+            spidey.right = false;
+        }
+        if (keyCode == 40) {
+            spidey.down = false;
+        }
+        if (keyCode == 37) {
+            spidey.left = false;
+        }
+        if (keyCode == 38) {
+            spidey.up = false;
+        }
+    }
+
+    public void keyTyped(KeyEvent event){}
+
+    public void crash() { // interactions between characters and buildings
         if (venom.rec.intersects(spidey.rec)) {
             venom.dx = -venom.dx;
             venom.dy = -venom.dy;
